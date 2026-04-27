@@ -1,0 +1,97 @@
+﻿@startuml
+title KidWay - Route Management Class Diagram
+
+class Route {
+  - Guid id
+  - Guid organizationId
+  - string name
+  - string description
+  - RouteStatus status
+  - DateTime createdAt
+  + activate()
+  + deactivate()
+  + addStop(stop: RouteStop)
+  + removeStop(stopId: Guid)
+}
+
+class RouteStop {
+  - Guid id
+  - string name
+  - string address
+  - decimal latitude
+  - decimal longitude
+  - int order
+  - StopType type
+  + updateLocation(latitude: decimal, longitude: decimal)
+  + updateOrder(order: int)
+}
+
+class RouteSchedule {
+  - Guid id
+  - DateTime startTime
+  - DateTime endTime
+  - ScheduleFrequency frequency
+  - ScheduleStatus status
+  + activate()
+  + cancel()
+  + reschedule(startTime: DateTime, endTime: DateTime)
+}
+
+class PickupPoint {
+  - Guid id
+  - string address
+  - decimal latitude
+  - decimal longitude
+  - string reference
+  + updateReference(reference: string)
+  + updateCoordinates(latitude: decimal, longitude: decimal)
+}
+
+class RouteOptimizationRule {
+  - Guid id
+  - OptimizationType type
+  - bool enabled
+  + enable()
+  + disable()
+}
+
+enum RouteStatus {
+  Active
+  Inactive
+  Draft
+  Archived
+}
+
+enum StopType {
+  Pickup
+  DropOff
+  School
+  Checkpoint
+}
+
+enum ScheduleFrequency {
+  Daily
+  Weekdays
+  Weekly
+  Custom
+}
+
+enum ScheduleStatus {
+  Active
+  Cancelled
+  Completed
+}
+
+enum OptimizationType {
+  ShortestDistance
+  FastestTime
+  TrafficAware
+  CapacityAware
+}
+
+Route "1" -- "0..*" RouteStop
+Route "1" -- "0..*" RouteSchedule
+RouteStop "1" -- "0..1" PickupPoint
+Route "1" -- "0..*" RouteOptimizationRule
+
+@enduml
