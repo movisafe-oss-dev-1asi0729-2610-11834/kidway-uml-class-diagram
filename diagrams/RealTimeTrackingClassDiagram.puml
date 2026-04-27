@@ -1,0 +1,74 @@
+﻿@startuml
+title KidWay - Real-Time Tracking Class Diagram
+
+class TrackingSession {
+  - Guid id
+  - Guid tripId
+  - Guid vehicleId
+  - DateTime startedAt
+  - DateTime endedAt
+  - TrackingStatus status
+  + start()
+  + stop()
+  + isActive(): bool
+}
+
+class LocationPoint {
+  - Guid id
+  - decimal latitude
+  - decimal longitude
+  - decimal speed
+  - DateTime recordedAt
+  + updateCoordinates(latitude: decimal, longitude: decimal)
+}
+
+class ETA {
+  - Guid id
+  - DateTime estimatedArrivalTime
+  - int delayMinutes
+  - ETAStatus status
+  + updateEstimate(estimatedArrivalTime: DateTime)
+  + markDelayed(delayMinutes: int)
+}
+
+class RouteProgress {
+  - Guid id
+  - decimal completedPercentage
+  - int completedStops
+  - int remainingStops
+  + updateProgress(completedPercentage: decimal)
+}
+
+class TrackingAlert {
+  - Guid id
+  - TrackingAlertType type
+  - string message
+  - DateTime triggeredAt
+  + resolve()
+}
+
+enum TrackingStatus {
+  Active
+  Completed
+  Interrupted
+}
+
+enum ETAStatus {
+  OnTime
+  Delayed
+  Unknown
+}
+
+enum TrackingAlertType {
+  RouteDeviation
+  LongStop
+  SignalLost
+  SpeedAlert
+}
+
+TrackingSession "1" -- "0..*" LocationPoint
+TrackingSession "1" -- "1" ETA
+TrackingSession "1" -- "1" RouteProgress
+TrackingSession "1" -- "0..*" TrackingAlert
+
+@enduml
