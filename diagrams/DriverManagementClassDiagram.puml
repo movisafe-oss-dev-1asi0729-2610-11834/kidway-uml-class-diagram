@@ -1,0 +1,96 @@
+﻿@startuml
+title KidWay - Driver Management Class Diagram
+
+class Driver {
+  - Guid id
+  - Guid organizationId
+  - string firstName
+  - string lastName
+  - string phoneNumber
+  - string email
+  - DriverStatus status
+  - DateTime registeredAt
+  + activate()
+  + deactivate()
+  + updateContactInfo(phoneNumber: string, email: string)
+  + markUnavailable()
+}
+
+class DriverLicense {
+  - Guid id
+  - string licenseNumber
+  - LicenseCategory category
+  - DateTime issuedAt
+  - DateTime expiresAt
+  + isExpired(): bool
+  + renew(expiresAt: DateTime)
+}
+
+class DriverAvailability {
+  - Guid id
+  - DateTime availableFrom
+  - DateTime availableUntil
+  - AvailabilityStatus status
+  + markAvailable()
+  + markUnavailable()
+}
+
+class DriverAssignment {
+  - Guid id
+  - Guid vehicleId
+  - Guid routeId
+  - DateTime assignedAt
+  - AssignmentStatus status
+  + activate()
+  + cancel()
+  + complete()
+}
+
+class DriverSchedule {
+  - Guid id
+  - DateTime startTime
+  - DateTime endTime
+  - ScheduleStatus status
+  + schedule()
+  + cancel()
+  + markCompleted()
+}
+
+enum DriverStatus {
+  Active
+  Inactive
+  Suspended
+  Unavailable
+}
+
+enum LicenseCategory {
+  A1
+  A2
+  A3
+  Professional
+}
+
+enum AvailabilityStatus {
+  Available
+  Unavailable
+  Assigned
+}
+
+enum AssignmentStatus {
+  Active
+  Cancelled
+  Completed
+}
+
+enum ScheduleStatus {
+  Scheduled
+  Cancelled
+  Completed
+}
+
+Driver "1" -- "1" DriverLicense
+Driver "1" -- "0..*" DriverAvailability
+Driver "1" -- "0..*" DriverAssignment
+Driver "1" -- "0..*" DriverSchedule
+
+@enduml

@@ -1,0 +1,91 @@
+﻿@startuml
+title KidWay - User Profiles Class Diagram
+
+class OrganizationProfile {
+  - Guid id
+  - string name
+  - OrganizationType type
+  - string taxIdentifier
+  - string address
+  + updateAddress(address: string)
+  + updateOrganizationInfo(name: string)
+}
+
+class UserProfile {
+  - Guid id
+  - Guid userId
+  - string firstName
+  - string lastName
+  - string phoneNumber
+  - string jobTitle
+  - ProfileStatus status
+  - DateTime updatedAt
+  + updateContactInfo(phoneNumber: string)
+  + updateJobTitle(jobTitle: string)
+  + deactivate()
+}
+
+class Preference {
+  - Guid id
+  - Language language
+  - ThemeMode theme
+  - string timeZone
+  + changeLanguage(language: Language)
+  + changeTheme(theme: ThemeMode)
+}
+
+class ContactInfo {
+  - string email
+  - string phoneNumber
+  - string emergencyContact
+  + updateEmail(email: string)
+  + updatePhone(phoneNumber: string)
+}
+
+class NotificationPreference {
+  - Guid id
+  - bool emailEnabled
+  - bool smsEnabled
+  - bool pushEnabled
+  - AlertPriority minimumPriority
+  + enableEmail()
+  + enableSms()
+  + enablePush()
+  + setMinimumPriority(priority: AlertPriority)
+}
+
+enum ProfileStatus {
+  Active
+  Inactive
+  Pending
+}
+
+enum OrganizationType {
+  IndependentOperator
+  TransportCompany
+}
+
+enum Language {
+  English
+  Spanish
+}
+
+enum ThemeMode {
+  Light
+  Dark
+  System
+}
+
+enum AlertPriority {
+  Low
+  Medium
+  High
+  Critical
+}
+
+OrganizationProfile "1" -- "0..*" UserProfile
+UserProfile "1" -- "1" Preference
+UserProfile "1" -- "1" ContactInfo
+Preference "1" -- "1" NotificationPreference
+
+@enduml

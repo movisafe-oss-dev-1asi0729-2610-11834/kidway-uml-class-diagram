@@ -1,0 +1,93 @@
+﻿@startuml
+title KidWay - Company Management Class Diagram
+
+class Company {
+  - Guid id
+  - string name
+  - string taxIdentifier
+  - string address
+  - CompanyStatus status
+  - DateTime registeredAt
+  + activate()
+  + deactivate()
+  + updateAddress(address: string)
+}
+
+class Branch {
+  - Guid id
+  - Guid companyId
+  - string name
+  - string address
+  - BranchStatus status
+  + activate()
+  + deactivate()
+  + updateAddress(address: string)
+}
+
+class CompanySetting {
+  - Guid id
+  - Guid companyId
+  - string settingKey
+  - string settingValue
+  + updateValue(value: string)
+}
+
+class CompanyUser {
+  - Guid id
+  - Guid companyId
+  - Guid userId
+  - CompanyUserRole role
+  - CompanyUserStatus status
+  + activate()
+  + deactivate()
+  + changeRole(role: CompanyUserRole)
+}
+
+class CompanyPolicy {
+  - Guid id
+  - Guid companyId
+  - PolicyType type
+  - bool enabled
+  + enable()
+  + disable()
+}
+
+enum CompanyStatus {
+  Active
+  Inactive
+  Suspended
+}
+
+enum BranchStatus {
+  Active
+  Inactive
+  Closed
+}
+
+enum CompanyUserRole {
+  CompanyAdmin
+  FleetManager
+  OperationsManager
+  DriverCoordinator
+}
+
+enum CompanyUserStatus {
+  Active
+  Inactive
+  Suspended
+}
+
+enum PolicyType {
+  RouteApproval
+  DriverValidation
+  VehicleMaintenance
+  AttendanceConfirmation
+  IncidentEscalation
+}
+
+Company "1" -- "0..*" Branch
+Company "1" -- "0..*" CompanySetting
+Company "1" -- "0..*" CompanyUser
+Company "1" -- "0..*" CompanyPolicy
+
+@enduml
