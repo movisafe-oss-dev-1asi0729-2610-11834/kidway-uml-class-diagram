@@ -1,0 +1,82 @@
+﻿@startuml
+title KidWay - Student Management Class Diagram
+
+class Student {
+  - Guid id
+  - Guid organizationId
+  - string firstName
+  - string lastName
+  - DateTime birthDate
+  - string gradeLevel
+  - StudentStatus status
+  - DateTime registeredAt
+  + activate()
+  + deactivate()
+  + assignGuardian(guardian: Guardian)
+  + assignPickupPoint(point: PickupPoint)
+}
+
+class Guardian {
+  - Guid id
+  - string firstName
+  - string lastName
+  - string phoneNumber
+  - string email
+  - GuardianRelationship relationship
+  + updateContactInfo(phone: string, email: string)
+}
+
+class EmergencyContact {
+  - Guid id
+  - string fullName
+  - string phoneNumber
+  - string relationship
+  + updatePhone(phone: string)
+}
+
+class PickupPoint {
+  - Guid id
+  - string address
+  - decimal latitude
+  - decimal longitude
+  - string reference
+  + updateReference(reference: string)
+}
+
+class StudentTransportAssignment {
+  - Guid id
+  - Guid routeId
+  - Guid vehicleId
+  - Guid driverId
+  - AssignmentStatus status
+  + activate()
+  + cancel()
+}
+
+enum StudentStatus {
+  Active
+  Inactive
+  Suspended
+  Graduated
+}
+
+enum GuardianRelationship {
+  Father
+  Mother
+  Tutor
+  Relative
+  AuthorizedPerson
+}
+
+enum AssignmentStatus {
+  Active
+  Cancelled
+  Completed
+}
+
+Student "1" -- "1..*" Guardian
+Student "1" -- "0..*" EmergencyContact
+Student "1" -- "0..1" PickupPoint
+Student "1" -- "0..*" StudentTransportAssignment
+
+@enduml
