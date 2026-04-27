@@ -1,0 +1,83 @@
+﻿@startuml
+title KidWay - Trip Management Class Diagram
+
+class Trip {
+  - Guid id
+  - Guid routeId
+  - Guid vehicleId
+  - Guid driverId
+  - DateTime scheduledStartTime
+  - DateTime actualStartTime
+  - DateTime actualEndTime
+  - TripStatus status
+  + start()
+  + complete()
+  + cancel()
+  + markDelayed(delayMinutes: int)
+}
+
+class TripStop {
+  - Guid id
+  - Guid routeStopId
+  - int stopOrder
+  - DateTime estimatedArrivalTime
+  - DateTime actualArrivalTime
+  - StopStatus status
+  + markArrived()
+  + skip()
+}
+
+class TripEvent {
+  - Guid id
+  - TripEventType type
+  - string description
+  - DateTime occurredAt
+  + register()
+}
+
+class TripDelay {
+  - Guid id
+  - int delayMinutes
+  - string reason
+  - DateTime reportedAt
+  + updateReason(reason: string)
+}
+
+class TripCancellation {
+  - Guid id
+  - string reason
+  - DateTime cancelledAt
+  - string cancelledBy
+  + confirmCancellation()
+}
+
+enum TripStatus {
+  Scheduled
+  InProgress
+  Delayed
+  Completed
+  Cancelled
+}
+
+enum StopStatus {
+  Pending
+  Arrived
+  Skipped
+  Completed
+}
+
+enum TripEventType {
+  Started
+  StopArrived
+  Delayed
+  IncidentReported
+  Completed
+  Cancelled
+}
+
+Trip "1" -- "0..*" TripStop
+Trip "1" -- "0..*" TripEvent
+Trip "1" -- "0..1" TripDelay
+Trip "1" -- "0..1" TripCancellation
+
+@enduml
