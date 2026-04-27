@@ -1,0 +1,66 @@
+﻿@startuml
+title KidWay - Attendance Tracking Class Diagram
+
+class AttendanceRecord {
+  - Guid id
+  - Guid studentId
+  - Guid tripId
+  - Guid stopId
+  - AttendanceStatus status
+  - DateTime recordedAt
+  + markBoarded()
+  + markDroppedOff()
+  + markAbsent()
+}
+
+class BoardingEvent {
+  - Guid id
+  - Guid attendanceRecordId
+  - DateTime boardedAt
+  - string verifiedBy
+  + confirm()
+}
+
+class DropoffEvent {
+  - Guid id
+  - Guid attendanceRecordId
+  - DateTime droppedAt
+  - string verifiedBy
+  + confirm()
+}
+
+class AbsenceRecord {
+  - Guid id
+  - Guid attendanceRecordId
+  - string reason
+  - DateTime reportedAt
+  + justify(reason: string)
+}
+
+class AttendanceNotification {
+  - Guid id
+  - Guid attendanceRecordId
+  - NotificationType type
+  - DateTime sentAt
+  + send()
+}
+
+enum AttendanceStatus {
+  Pending
+  Boarded
+  DroppedOff
+  Absent
+}
+
+enum NotificationType {
+  BoardingAlert
+  DropoffAlert
+  AbsenceAlert
+}
+
+AttendanceRecord "1" -- "0..1" BoardingEvent
+AttendanceRecord "1" -- "0..1" DropoffEvent
+AttendanceRecord "1" -- "0..1" AbsenceRecord
+AttendanceRecord "1" -- "0..*" AttendanceNotification
+
+@enduml

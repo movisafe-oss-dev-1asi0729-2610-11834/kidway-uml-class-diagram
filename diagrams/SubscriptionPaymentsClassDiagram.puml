@@ -1,0 +1,99 @@
+﻿@startuml
+title KidWay - Subscription & Payments Class Diagram
+
+class Plan {
+  - Guid id
+  - string name
+  - string description
+  - decimal monthlyPrice
+  - int maxUsers
+  - int maxVehicles
+  - int maxRoutes
+  - PlanStatus status
+  + activate()
+  + deactivate()
+  + updatePrice(price: decimal)
+}
+
+class Subscription {
+  - Guid id
+  - Guid organizationId
+  - DateTime startDate
+  - DateTime endDate
+  - SubscriptionStatus status
+  + activate()
+  + cancel()
+  + renew(endDate: DateTime)
+  + isActive(): bool
+}
+
+class BillingAccount {
+  - Guid id
+  - Guid organizationId
+  - string billingEmail
+  - string taxIdentifier
+  + updateBillingEmail(email: string)
+  + updateTaxIdentifier(taxIdentifier: string)
+}
+
+class Invoice {
+  - Guid id
+  - string invoiceNumber
+  - DateTime issuedAt
+  - DateTime dueDate
+  - decimal totalAmount
+  - InvoiceStatus status
+  + markAsPaid()
+  + markAsOverdue()
+}
+
+class Payment {
+  - Guid id
+  - decimal amount
+  - DateTime paidAt
+  - PaymentMethod method
+  - PaymentStatus status
+  + confirm()
+  + reject()
+}
+
+enum PlanStatus {
+  Active
+  Inactive
+}
+
+enum SubscriptionStatus {
+  Active
+  Cancelled
+  Expired
+  Pending
+}
+
+enum InvoiceStatus {
+  Pending
+  Paid
+  Overdue
+  Cancelled
+}
+
+enum PaymentStatus {
+  Pending
+  Confirmed
+  Rejected
+  Refunded
+}
+
+enum PaymentMethod {
+  CreditCard
+  BankTransfer
+  DigitalWallet
+  OnlineGateway
+}
+
+Plan "1" -- "0..*" Subscription
+BillingAccount "1" -- "0..*" Subscription
+BillingAccount "1" -- "0..*" Invoice
+Subscription "1" -- "0..*" Invoice
+Invoice "1" -- "0..*" Payment
+
+@enduml

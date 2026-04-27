@@ -1,0 +1,74 @@
+﻿@startuml
+title KidWay - Analytics & Reports Class Diagram
+
+class Report {
+  - Guid id
+  - string name
+  - ReportType type
+  - DateTime generatedAt
+  - string generatedBy
+  - ReportStatus status
+  + generate()
+  + export(format: string)
+}
+
+class KPI {
+  - Guid id
+  - string name
+  - decimal value
+  - string unit
+  - KPIStatus status
+  + refresh()
+}
+
+class MetricSnapshot {
+  - Guid id
+  - DateTime capturedAt
+  - int activeTrips
+  - int activeDrivers
+  - int activeVehicles
+  - int transportedStudents
+}
+
+class DashboardSummary {
+  - Guid id
+  - DateTime createdAt
+  - string summaryText
+  + refresh()
+}
+
+class ExportHistory {
+  - Guid id
+  - Guid reportId
+  - string format
+  - DateTime exportedAt
+}
+
+enum ReportType {
+  Fleet
+  Attendance
+  Trips
+  Delays
+  Incidents
+  Financial
+}
+
+enum ReportStatus {
+  Pending
+  Generated
+  Exported
+  Failed
+}
+
+enum KPIStatus {
+  Normal
+  Warning
+  Critical
+}
+
+Report "1" -- "0..*" ExportHistory
+Report "1" -- "0..*" KPI
+DashboardSummary "1" -- "0..*" KPI
+MetricSnapshot "0..*" -- "1" DashboardSummary
+
+@enduml

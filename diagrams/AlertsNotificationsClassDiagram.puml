@@ -1,0 +1,91 @@
+﻿@startuml
+title KidWay - Alerts & Notifications Class Diagram
+
+class Alert {
+  - Guid id
+  - Guid tripId
+  - AlertType type
+  - AlertPriority priority
+  - string message
+  - AlertStatus status
+  - DateTime createdAt
+  + activate()
+  + resolve()
+}
+
+class Notification {
+  - Guid id
+  - Guid alertId
+  - NotificationChannel channel
+  - string recipient
+  - NotificationStatus status
+  - DateTime sentAt
+  + send()
+  + markDelivered()
+}
+
+class NotificationTemplate {
+  - Guid id
+  - string name
+  - NotificationChannel channel
+  - string content
+  + updateContent(content: string)
+}
+
+class AlertRule {
+  - Guid id
+  - AlertType type
+  - bool enabled
+  - int threshold
+  + enable()
+  + disable()
+}
+
+class DeliveryLog {
+  - Guid id
+  - Guid notificationId
+  - string response
+  - DateTime loggedAt
+}
+
+enum AlertType {
+  Delay
+  RouteDeviation
+  SpeedViolation
+  Emergency
+  Absence
+}
+
+enum AlertPriority {
+  Low
+  Medium
+  High
+  Critical
+}
+
+enum AlertStatus {
+  Active
+  Resolved
+  Cancelled
+}
+
+enum NotificationChannel {
+  Push
+  Email
+  SMS
+  WhatsApp
+}
+
+enum NotificationStatus {
+  Pending
+  Sent
+  Delivered
+  Failed
+}
+
+Alert "1" -- "0..*" Notification
+Notification "1" -- "0..*" DeliveryLog
+AlertRule "0..*" -- "1" AlertType
+NotificationTemplate "0..*" -- "1" NotificationChannel
+
+@enduml

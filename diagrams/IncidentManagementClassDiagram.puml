@@ -1,0 +1,98 @@
+﻿@startuml
+title KidWay - Incident Management Class Diagram
+
+class Incident {
+  - Guid id
+  - Guid tripId
+  - Guid reportedBy
+  - IncidentType type
+  - IncidentSeverity severity
+  - IncidentStatus status
+  - string description
+  - DateTime reportedAt
+  + assign(responsibleId: Guid)
+  + resolve()
+  + escalate()
+}
+
+class IncidentAssignment {
+  - Guid id
+  - Guid incidentId
+  - Guid responsibleId
+  - DateTime assignedAt
+  + reassign(responsibleId: Guid)
+}
+
+class CorrectiveAction {
+  - Guid id
+  - Guid incidentId
+  - string description
+  - ActionStatus status
+  - DateTime createdAt
+  + start()
+  + complete()
+  + cancel()
+}
+
+class ResolutionRecord {
+  - Guid id
+  - Guid incidentId
+  - string resolutionSummary
+  - DateTime resolvedAt
+  - string resolvedBy
+  + updateSummary(summary: string)
+}
+
+class IncidentEvidence {
+  - Guid id
+  - Guid incidentId
+  - EvidenceType type
+  - string fileUrl
+  - DateTime uploadedAt
+  + attach()
+}
+
+enum IncidentType {
+  Delay
+  VehicleIssue
+  StudentIssue
+  RouteProblem
+  Emergency
+}
+
+enum IncidentSeverity {
+  Low
+  Medium
+  High
+  Critical
+}
+
+enum IncidentStatus {
+  Open
+  Assigned
+  InProgress
+  Resolved
+  Escalated
+  Cancelled
+}
+
+enum ActionStatus {
+  Pending
+  InProgress
+  Completed
+  Cancelled
+}
+
+enum EvidenceType {
+  Photo
+  Document
+  Audio
+  Note
+}
+
+Incident "1" -- "0..*" IncidentAssignment
+Incident "1" -- "0..*" CorrectiveAction
+Incident "1" -- "0..1" ResolutionRecord
+Incident "1" -- "0..*" IncidentEvidence
+
+@enduml

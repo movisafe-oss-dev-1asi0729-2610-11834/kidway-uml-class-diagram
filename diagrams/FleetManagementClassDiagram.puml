@@ -1,0 +1,95 @@
+﻿@startuml
+title KidWay - Fleet Management Class Diagram
+
+class Vehicle {
+  - Guid id
+  - Guid organizationId
+  - string plateNumber
+  - string brand
+  - string model
+  - int capacity
+  - VehicleStatus status
+  - DateTime registeredAt
+  + activate()
+  + deactivate()
+  + updateCapacity(capacity: int)
+  + markAsMaintenance()
+}
+
+class Fleet {
+  - Guid id
+  - Guid organizationId
+  - string name
+  - FleetStatus status
+  + addVehicle(vehicle: Vehicle)
+  + removeVehicle(vehicleId: Guid)
+  + calculateAvailableCapacity(): int
+}
+
+class VehicleDocument {
+  - Guid id
+  - DocumentType type
+  - string documentNumber
+  - DateTime issuedAt
+  - DateTime expiresAt
+  + isExpired(): bool
+  + renew(expiresAt: DateTime)
+}
+
+class MaintenanceRecord {
+  - Guid id
+  - DateTime scheduledAt
+  - DateTime completedAt
+  - string description
+  - MaintenanceStatus status
+  + schedule()
+  + complete()
+  + cancel()
+}
+
+class VehicleAvailability {
+  - Guid id
+  - DateTime availableFrom
+  - DateTime availableUntil
+  - AvailabilityStatus status
+  + markAvailable()
+  + markUnavailable()
+}
+
+enum VehicleStatus {
+  Active
+  Inactive
+  Maintenance
+  Unavailable
+}
+
+enum FleetStatus {
+  Active
+  Inactive
+}
+
+enum DocumentType {
+  VehicleRegistration
+  Insurance
+  TechnicalInspection
+  OperationPermit
+}
+
+enum MaintenanceStatus {
+  Scheduled
+  Completed
+  Cancelled
+}
+
+enum AvailabilityStatus {
+  Available
+  Unavailable
+  Assigned
+}
+
+Fleet "1" -- "0..*" Vehicle
+Vehicle "1" -- "0..*" VehicleDocument
+Vehicle "1" -- "0..*" MaintenanceRecord
+Vehicle "1" -- "0..*" VehicleAvailability
+
+@enduml

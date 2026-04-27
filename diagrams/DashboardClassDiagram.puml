@@ -1,0 +1,83 @@
+﻿@startuml
+title KidWay - Dashboard Class Diagram
+
+class Dashboard {
+  - Guid id
+  - Guid userId
+  - string name
+  - DateTime createdAt
+  + refresh()
+  + addWidget(widget: DashboardWidget)
+  + removeWidget(widgetId: Guid)
+}
+
+class DashboardWidget {
+  - Guid id
+  - string title
+  - WidgetType type
+  - int position
+  - WidgetStatus status
+  + activate()
+  + deactivate()
+  + updatePosition(position: int)
+}
+
+class OverviewSummary {
+  - Guid id
+  - int activeTrips
+  - int delayedTrips
+  - int activeVehicles
+  - int assignedDrivers
+  - int registeredStudents
+  - DateTime generatedAt
+  + refreshSummary()
+}
+
+class KPI {
+  - Guid id
+  - string name
+  - decimal value
+  - string unit
+  - KPIStatus status
+  + updateValue(value: decimal)
+  + markAsCritical()
+}
+
+class DashboardFilter {
+  - Guid id
+  - DateTime startDate
+  - DateTime endDate
+  - string routeReference
+  - string companyScope
+  + apply()
+  + reset()
+}
+
+enum WidgetType {
+  Trips
+  Vehicles
+  Drivers
+  Students
+  Attendance
+  Notifications
+  Reports
+}
+
+enum WidgetStatus {
+  Active
+  Inactive
+}
+
+enum KPIStatus {
+  Normal
+  Warning
+  Critical
+}
+
+Dashboard "1" -- "0..*" DashboardWidget
+Dashboard "1" -- "1" OverviewSummary
+Dashboard "1" -- "0..*" KPI
+Dashboard "1" -- "0..1" DashboardFilter
+DashboardWidget "1" -- "0..*" KPI
+
+@enduml

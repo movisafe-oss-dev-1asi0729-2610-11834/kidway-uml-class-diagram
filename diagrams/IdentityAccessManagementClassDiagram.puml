@@ -1,0 +1,96 @@
+﻿@startuml
+title KidWay - Identity & Access Management Class Diagram
+
+class User {
+  - Guid id
+  - string firstName
+  - string lastName
+  - string email
+  - UserStatus status
+  - DateTime createdAt
+  + activate()
+  + deactivate()
+  + assignRole(role: Role)
+  + removeRole(role: Role)
+}
+
+class Credential {
+  - Guid id
+  - string passwordHash
+  - DateTime lastPasswordChangeAt
+  + verifyPassword(password: string): bool
+  + updatePassword(newPasswordHash: string)
+}
+
+class Role {
+  - Guid id
+  - string name
+  - RoleType type
+  + addPermission(permission: Permission)
+  + removePermission(permission: Permission)
+}
+
+class Permission {
+  - Guid id
+  - string name
+  - PermissionScope scope
+  + isGrantedFor(scope: PermissionScope): bool
+}
+
+class Session {
+  - Guid id
+  - DateTime startedAt
+  - DateTime expiresAt
+  - SessionStatus status
+  + expire()
+  + isActive(): bool
+}
+
+class AccessToken {
+  - Guid id
+  - string tokenValue
+  - DateTime issuedAt
+  - DateTime expiresAt
+  + isExpired(): bool
+}
+
+enum UserStatus {
+  Active
+  Inactive
+  Suspended
+}
+
+enum RoleType {
+  IndependentOperator
+  TransportCompanyUser
+  CompanyAdministrator
+  KidWayAdministrator
+}
+
+enum PermissionScope {
+  Routes
+  Students
+  Fleet
+  Drivers
+  Trips
+  Tracking
+  Attendance
+  Notifications
+  Reports
+  Billing
+  Administration
+}
+
+enum SessionStatus {
+  Active
+  Expired
+  Revoked
+}
+
+User "1" -- "1" Credential
+User "1" -- "0..*" Session
+Session "1" -- "0..*" AccessToken
+User "0..*" -- "0..*" Role
+Role "0..*" -- "0..*" Permission
+
+@enduml
