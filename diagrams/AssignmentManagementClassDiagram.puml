@@ -1,0 +1,67 @@
+﻿@startuml
+title KidWay - Assignment Management Class Diagram
+
+class Assignment {
+  - Guid id
+  - Guid studentId
+  - Guid routeId
+  - Guid vehicleId
+  - Guid driverId
+  - DateTime assignedAt
+  - AssignmentStatus status
+  + activate()
+  + cancel()
+  + complete()
+}
+
+class CapacityValidation {
+  - Guid id
+  - int maxCapacity
+  - int currentAssigned
+  + hasCapacity(): bool
+  + increase()
+  + decrease()
+}
+
+class ScheduleValidation {
+  - Guid id
+  - DateTime startTime
+  - DateTime endTime
+  + hasConflict(): bool
+}
+
+class AssignmentRule {
+  - Guid id
+  - RuleType type
+  - bool enabled
+  + enable()
+  + disable()
+}
+
+class AssignmentHistory {
+  - Guid id
+  - DateTime createdAt
+  - string action
+  - string performedBy
+}
+
+enum AssignmentStatus {
+  Active
+  Cancelled
+  Completed
+  Pending
+}
+
+enum RuleType {
+  CapacityCheck
+  DriverAvailability
+  RouteConflict
+  DuplicateAssignment
+}
+
+Assignment "1" -- "1" CapacityValidation
+Assignment "1" -- "1" ScheduleValidation
+Assignment "1" -- "0..*" AssignmentRule
+Assignment "1" -- "0..*" AssignmentHistory
+
+@enduml 
